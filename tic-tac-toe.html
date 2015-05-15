@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tic-tac-toe</title>
+<script type="text/javascript">
+function main() {
+    var canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    var context = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.style.position = "absolute";
+    canvas.style.left = "0px";
+    canvas.style.top = "0px";
+    canvas.height = window.innerHeight;
+	var width = window.innerWidth;
+	var height = window.innerHeight;
+	
+    function drawField() {
+        context.fillStyle = "#D3D3D3";
+        context.fillRect(0, 0, width, height);
+		context.fillStyle = "#778899";
+		context.fillRect(width/2 - 700/2, height/2 - 700/2, 700, 700);
+		context.fillStyle = "#B0C4DE";
+		context.fillRect(width/2 - 680/2, height/2 - 680/2, 680, 680);
+		for (var j = 0; j <= 14; j++) {
+			for (var i = 0; i <= 14; i++) {
+				context.fillStyle = "#778899";
+				context.fillRect(width/2 - 700/2 + i*44 + 22, height/2 - 700/2 + j*44 + 22, 40, 40);
+			}
+		}
+    }
+	
+	function draw() {
+        drawField();
+		drawX0();
+    }
+
+	document.addEventListener('keydown', canvas_keypress, false);
+	canvas.onmousedown = addX0;
+	 
+    function move(e) {
+	
+    }
+	function stopMoving(e) {
+		
+    }
+	
+	function canvas_keypress(event) {
+		if(k == 37) {
+            left();
+        }
+		//Z z   90
+		//←	    37
+        //↑	    38
+        //→    39
+        //↓    40
+		//c C   67
+		//u U	85
+		//R r   82
+    }
+	
+	var k = 0;
+	var xarray = new Array();
+	var oarray = new Array();
+	var tcij = new Array();
+	var counter = 0;
+	var xcounter = -1;
+	var ocounter = -1;
+	
+	function addX0(e) {
+		sx = e.pageX - canvas.offsetLeft;
+		sy = e.pageY - canvas.offsetTop;
+		var tt = MouseOverCell2(sx,sy);
+		var ti = tt[0];
+		var tj = tt[1];
+		if (((tcij.in_array(ti+"and"+tj)) == false)&&(MouseOverCell(sx,sy))) {
+			if (counter % 2 == 0) {
+				var x = new Object();
+				xcounter++;
+				x.number = xcounter;
+				x.i = ti;
+				x.j = tj;
+				x.color = "#B0C4DE";
+				xarray[xcounter] = x;
+				draw();
+				counter++;
+			} else {
+				var o = new Object();
+				ocounter++;
+				o.number = ocounter;
+				o.i = ti;
+				o.j = tj;
+				o.color = "#B0C4DE";
+				oarray[ocounter] = o;
+				draw();
+				counter++;
+			}
+		}
+		check();
+	}
+	
+	function MouseOverCell(sx,sy) {
+		for (var j = 0; j <= 14; j++) {
+			for (var i = 0; i <= 14; i++) {
+				if((sx > (width/2 - 700/2 + i*44 + 22))&&(sx < (width/2 - 700/2 + i*44 + 22 + 40))&&(sy > (height/2 - 700/2 + j*44 + 22))&&(sy < (height/2 - 700/2 + j*44 + 22 + 40))) {
+					var iandj = (i+"and"+j);
+					tcij.push(iandj);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	function MouseOverCell2(sx,sy) {
+		for (var j = 0; j <= 14; j++) {
+			for (var i = 0; i <= 14; i++) {
+				if((sx > (width/2 - 700/2 + i*44 + 22))&&(sx < (width/2 - 700/2 + i*44 + 22 + 40))&&(sy > (height/2 - 700/2 + j*44 + 22))&&(sy < (height/2 - 700/2 + j*44 + 22 + 40))) {
+					return [i,j];
+				}
+			}
+		}
+		return false;
+	}
+	
+
+	function drawX0() {
+		for (var i = 0; i < oarray.length; i++) {
+			var centerX = oarray[i].i*44 + width/2 - 700/2 + 42;
+			var centerY = oarray[i].j*44 + height/2 - 700/2 + 42;
+			var radius = 14;
+			context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            context.fillStyle = oarray[i].color;
+            context.fill();
+            context.lineWidth = 3;
+            context.strokeStyle = oarray[i].color;
+            context.stroke();
+			context.closePath();
+			
+			var centerX = oarray[i].i*44 + width/2 - 700/2 + 42;
+			var centerY = oarray[i].j*44 + height/2 - 700/2 + 42;
+			var radius = 10;
+			context.beginPath();
+            context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            context.fillStyle = "#778899";
+            context.fill();
+            context.lineWidth = 3;
+            context.strokeStyle = "#778899";
+            context.stroke();
+			context.closePath();
+		}
+		for (var i = 0; i < xarray.length; i++) {
+			context.fillStyle = xarray[i].color;
+            context.strokeStyle = xarray[i].color;
+			context.lineWidth = 5;
+			context.beginPath();
+			context.moveTo(xarray[i].i*44 + width/2 - 700/2 + 30, xarray[i].j*44 + height/2 - 700/2 + 30);
+			context.lineTo(xarray[i].i*44 + width/2 - 700/2 + 55, xarray[i].j*44 + height/2 - 700/2 + 55);
+			context.stroke();
+			context.closePath();
+			context.beginPath();
+			context.moveTo(xarray[i].i*44 + width/2 - 700/2 + 55, xarray[i].j*44 + height/2 - 700/2 + 30);
+			context.lineTo(xarray[i].i*44 + width/2 - 700/2 + 30, xarray[i].j*44 + height/2 - 700/2 + 55);
+			context.stroke();
+			context.closePath();
+		}
+	}
+	
+	function check() {
+		for (var i = 0; i <= 14; i++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var j = 0; j <= 14; j++) {
+				var b = false;
+				for (var k = 0; k < xarray.length; k++) {
+					if ((xarray[k].i == i)&&(xarray[k].j == j)) {
+						b = true;
+						temparr.push(xarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						xarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('X won!');
+					window.location.reload(false); 
+				}
+			}
+		}
+		for (var j = 0; j <= 14; j++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var i = 0; i <= 14; i++) {
+				var b = false;
+				for (var k = 0; k < xarray.length; k++) {
+					if ((xarray[k].i == i)&&(xarray[k].j == j)) {
+						b = true;
+						temparr.push(xarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						xarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('X won!');
+					window.location.reload(false); 
+				}
+			}
+		}
+		for (var i = 0; i < diagonals.length; i++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var j = 0; j < diagonals[i].x.length; j++) {
+				var b = false;
+				for (var k = 0; k < xarray.length; k++) {
+					if ((xarray[k].i == diagonals[i].x[j])&&(xarray[k].j == diagonals[i].y[j])) {
+						b = true;
+						temparr.push(xarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						xarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('X won!');
+					window.location.reload(false); 
+				}
+			}
+			
+		}
+		
+		
+		for (var i = 0; i <= 14; i++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var j = 0; j <= 14; j++) {
+				var b = false;
+				for (var k = 0; k < oarray.length; k++) {
+					if ((oarray[k].i == i)&&(oarray[k].j == j)) {
+						b = true;
+						temparr.push(oarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						oarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('0 won!');
+					window.location.reload(false); 
+				}
+			}
+		}
+		for (var j = 0; j <= 14; j++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var i = 0; i <= 14; i++) {
+				var b = false;
+				for (var k = 0; k < oarray.length; k++) {
+					if ((oarray[k].i == i)&&(oarray[k].j == j)) {
+						b = true;
+						temparr.push(oarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						oarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('0 won!');
+					window.location.reload(false); 
+				}
+			}
+		}
+		for (var i = 0; i < diagonals.length; i++) {
+			var cc = 0;
+			var temparr = new Array();
+			for (var j = 0; j < diagonals[i].x.length; j++) {
+				var b = false;
+				for (var k = 0; k < oarray.length; k++) {
+					if ((oarray[k].i == diagonals[i].x[j])&&(oarray[k].j == diagonals[i].y[j])) {
+						b = true;
+						temparr.push(oarray[k].number);
+					}
+				}
+				if (b == true) {
+					cc++;
+				} else {
+					cc = 0;
+					temparr = [];
+				}
+				if (cc == 5) {
+					for (var n = 0; n < temparr.length; n++) {
+						oarray[temparr[n]].color = "#7FFF00";
+					}
+					draw();
+					alert ('0 won!');
+					window.location.reload(false); 
+				}
+			}
+			
+		}
+	}
+
+	Array.prototype.in_array = function(p_val) {
+		for(var i = 0, l = this.length; i < l; i++)	{
+			if(this[i] == p_val) {
+				return true;
+			}
+		}
+		return false;
+    }
+	
+	
+	
+	var diagonals = new Array();
+	
+	for (var i = 0; i <= 14; i++) {
+		var diagonal = new Object();
+		diagonal.x = [];
+		diagonal.y = [];
+		for (var j = i; j <= 14; j++) {
+			diagonal.x.push(j);
+		}
+		for (var j = 14; j >= i; j--) {
+			diagonal.y.push(j);
+		}
+		diagonals.push(diagonal);
+	} 
+
+	for (var i = 0; i <= 13; i++) {
+		var diagonal = new Object();
+		diagonal.x = [];
+		diagonal.y = [];
+		for (var j = 0; j <= i; j++) {
+			diagonal.x.push(j);
+		}
+		for (var j = i; j >= 0; j--) {
+			diagonal.y.push(j);
+		}
+		diagonals.push(diagonal);
+	}
+	
+	for (var i = 0; i <= 14; i++) {
+		var diagonal = new Object();
+		diagonal.x = [];
+		diagonal.y = [];
+		for (var j = 0; j <= i; j++) {
+			diagonal.x.push(j);
+		}
+		for (var j = i; j >= 0; j--) {
+			diagonal.y.push(14 - j);
+		}
+		diagonals.push(diagonal);
+	}
+	
+	for (var i = 0; i <= 13; i++) {
+		var diagonal = new Object();
+		diagonal.x = [];
+		diagonal.y = [];
+		for (var j = 0; j <= i; j++) {
+			diagonal.y.push(j);
+		}
+		for (var j = i; j >= 0; j--) {
+			diagonal.x.push(14 - j);
+		}
+		diagonals.push(diagonal);
+	}
+	
+
+	draw();
+}
+
+</script>
+</head>
+
+<body>
+<body onload="main()";>
+<canvas height='480' width='640' id='canvas0'></canvas>
+</body>
+</html>
